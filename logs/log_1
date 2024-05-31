@@ -1,0 +1,267 @@
+2024-06-01 01:35:34.191603: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2024-06-01 01:35:35.157748: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2.16.1
+Dataset Directory: C:/Users/e1121147/OneDrive - National University of Singapore/Documents/School/Y1Summer/Orbital/Milestone_1\dataset
+Found 20000 images belonging to 10 classes.
+Training Generator - Batches: 625
+Training Generator - Samples per batch: 32
+Training Generator - Total samples: 20000
+Steps per epoch: 625
+Training Batch Shape - Images: (32, 64, 64, 3) Labels: (32, 10)
+2024-06-01 01:35:39.103515: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Model: "sequential"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ conv2d (Conv2D)                      │ (None, 62, 62, 32)          │             896 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization                  │ (None, 62, 62, 32)          │             128 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d (MaxPooling2D)         │ (None, 31, 31, 32)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_1 (Conv2D)                    │ (None, 29, 29, 64)          │          18,496 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization_1                │ (None, 29, 29, 64)          │             256 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d_1 (MaxPooling2D)       │ (None, 14, 14, 64)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_2 (Conv2D)                    │ (None, 12, 12, 128)         │          73,856 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization_2                │ (None, 12, 12, 128)         │             512 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d_2 (MaxPooling2D)       │ (None, 6, 6, 128)           │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flatten (Flatten)                    │ (None, 4608)                │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense (Dense)                        │ (None, 512)                 │       2,359,808 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dropout (Dropout)                    │ (None, 512)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense_1 (Dense)                      │ (None, 10)                  │           5,130 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 2,459,082 (9.38 MB)
+ Trainable params: 2,458,634 (9.38 MB)
+ Non-trainable params: 448 (1.75 KB)
+Traceback (most recent call last):
+  File "C:\Users\e1121147\OneDrive - National University of Singapore\Documents\School\Y1Summer\Orbital\Milestone_1\training.py", line 83, in <module>
+    ModelCheckpoint('gesture_recognition_model.h5', save_best_only=True, verbose=1),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\e1121147\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\keras\src\callbacks\model_checkpoint.py", line 191, in __init__
+    raise ValueError(
+ValueError: The filepath provided must end in `.keras` (Keras model format). Received: filepath=gesture_recognition_model.h5
+╭─ pwsh   Milestone_1   main ≢  ~2   7s 490ms⠀                                       84    1,01:35 
+╰─ python .\training.py
+╭─ pwsh   Milestone_1   main ≢  ~2   0ms⠀                                            84    1,01:36 
+╰─ python .\training.py
+2024-06-01 01:36:45.918019: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2024-06-01 01:36:46.951578: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2.16.1
+Dataset Directory: C:/Users/e1121147/OneDrive - National University of Singapore/Documents/School/Y1Summer/Orbital/Milestone_1\dataset
+Found 20000 images belonging to 10 classes.
+Training Generator - Batches: 625
+Training Generator - Samples per batch: 32
+Training Generator - Total samples: 20000
+Steps per epoch: 625
+Training Batch Shape - Images: (32, 64, 64, 3) Labels: (32, 10)
+2024-06-01 01:36:50.831999: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Model: "sequential"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ conv2d (Conv2D)                      │ (None, 62, 62, 32)          │             896 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization                  │ (None, 62, 62, 32)          │             128 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d (MaxPooling2D)         │ (None, 31, 31, 32)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_1 (Conv2D)                    │ (None, 29, 29, 64)          │          18,496 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization_1                │ (None, 29, 29, 64)          │             256 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d_1 (MaxPooling2D)       │ (None, 14, 14, 64)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_2 (Conv2D)                    │ (None, 12, 12, 128)         │          73,856 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization_2                │ (None, 12, 12, 128)         │             512 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d_2 (MaxPooling2D)       │ (None, 6, 6, 128)           │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flatten (Flatten)                    │ (None, 4608)                │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense (Dense)                        │ (None, 512)                 │       2,359,808 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dropout (Dropout)                    │ (None, 512)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense_1 (Dense)                      │ (None, 10)                  │           5,130 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 2,459,082 (9.38 MB)
+ Trainable params: 2,458,634 (9.38 MB)
+ Non-trainable params: 448 (1.75 KB)
+Epoch 1/50
+C:\Users\e1121147\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\keras\src\trainers\data_adapters\py_dataset_adapter.py:121: UserWarning: Your `PyDataset` class should call `super().__init__(**kwargs)` in its constructor. `**kwargs` can include `workers`, `use_multiprocessing`, `max_queue_size`. Do not pass these arguments to `fit()`, as they will be ignored.
+  self._warn_if_super_not_called()
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 331ms/step - accuracy: 0.2610 - loss: 2.7368C:\Users\e1121147\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\keras\src\callbacks\early_stopping.py:155: UserWarning: Early stopping conditioned on metric `val_loss` which is not available. Available metrics are: accuracy,loss
+  current = self.get_monitor_value(logs)
+C:\Users\e1121147\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\keras\src\callbacks\model_checkpoint.py:206: UserWarning: Can save best model only with val_loss available, skipping.
+  self._save_model(epoch=epoch, batch=None, logs=logs)
+C:\Users\e1121147\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\keras\src\callbacks\callback_list.py:96: UserWarning: Learning rate reduction is conditioned on metric `val_loss` which is not available. Available metrics are: accuracy,loss,learning_rate.
+  callback.on_epoch_end(epoch, logs)
+625/625 ━━━━━━━━━━━━━━━━━━━━ 213s 331ms/step - accuracy: 0.2612 - loss: 2.7355 - learning_rate: 0.0010
+Epoch 2/50
+2024-06-01 01:40:24.375261: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:158: UserWarning: Your input ran out of data; interrupting training. Make sure that your dataset or generator can generate at least `steps_per_epoch * epochs` batches. You may need to use the `.repeat()` function when building your dataset.
+  self.gen.throw(typ, value, traceback)
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 3/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 215s 342ms/step - accuracy: 0.5784 - loss: 1.1339 - learning_rate: 0.0010
+Epoch 4/50
+2024-06-01 01:43:59.466858: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 15us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 5/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 212s 336ms/step - accuracy: 0.7515 - loss: 0.6585 - learning_rate: 0.0010
+Epoch 6/50
+2024-06-01 01:47:31.213189: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 7/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 210s 334ms/step - accuracy: 0.8193 - loss: 0.4894 - learning_rate: 0.0010
+Epoch 8/50
+2024-06-01 01:51:01.314920: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 9/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 211s 335ms/step - accuracy: 0.8633 - loss: 0.3776 - learning_rate: 0.0010
+Epoch 10/50
+2024-06-01 01:54:32.303579: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 11/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 210s 334ms/step - accuracy: 0.8882 - loss: 0.3081 - learning_rate: 0.0010
+Epoch 12/50
+2024-06-01 01:58:02.694145: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 13/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 211s 336ms/step - accuracy: 0.9036 - loss: 0.2793 - learning_rate: 0.0010
+Epoch 14/50
+2024-06-01 02:01:34.153552: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 15/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 211s 336ms/step - accuracy: 0.9182 - loss: 0.2332 - learning_rate: 0.0010
+Epoch 16/50
+2024-06-01 02:05:05.471319: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 17/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 260s 413ms/step - accuracy: 0.9246 - loss: 0.2183 - learning_rate: 0.0010
+Epoch 18/50
+2024-06-01 02:09:25.155439: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 19/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 294s 468ms/step - accuracy: 0.9300 - loss: 0.2058 - learning_rate: 0.0010
+Epoch 20/50
+2024-06-01 02:14:19.038822: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 21/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 208s 331ms/step - accuracy: 0.9351 - loss: 0.1895 - learning_rate: 0.0010
+Epoch 22/50
+2024-06-01 02:17:47.477478: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 23/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 210s 333ms/step - accuracy: 0.9373 - loss: 0.1764 - learning_rate: 0.0010
+Epoch 24/50
+2024-06-01 02:21:17.260907: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 32us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 25/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 209s 332ms/step - accuracy: 0.9403 - loss: 0.1676 - learning_rate: 0.0010
+Epoch 26/50
+2024-06-01 02:24:46.031824: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 27/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 208s 331ms/step - accuracy: 0.9428 - loss: 0.1649 - learning_rate: 0.0010
+Epoch 28/50
+2024-06-01 02:28:14.435953: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 29/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 390s 622ms/step - accuracy: 0.9463 - loss: 0.1484 - learning_rate: 0.0010
+Epoch 30/50
+2024-06-01 02:34:44.302324: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 31/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 229s 363ms/step - accuracy: 0.9429 - loss: 0.1606 - learning_rate: 0.0010
+Epoch 32/50
+2024-06-01 02:38:32.996129: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 33/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 211s 334ms/step - accuracy: 0.9495 - loss: 0.1510 - learning_rate: 0.0010
+Epoch 34/50
+2024-06-01 02:42:03.517639: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 26us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 35/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 211s 335ms/step - accuracy: 0.9538 - loss: 0.1375 - learning_rate: 0.0010
+Epoch 36/50
+2024-06-01 02:45:34.528003: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 37/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 211s 336ms/step - accuracy: 0.9530 - loss: 0.1320 - learning_rate: 0.0010
+Epoch 38/50
+2024-06-01 02:49:05.840934: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 39/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 211s 335ms/step - accuracy: 0.9537 - loss: 0.1351 - learning_rate: 0.0010
+Epoch 40/50
+2024-06-01 02:52:36.516528: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 41/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 209s 333ms/step - accuracy: 0.9560 - loss: 0.1288 - learning_rate: 0.0010
+Epoch 42/50
+2024-06-01 02:56:05.910440: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 25us/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 43/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 212s 337ms/step - accuracy: 0.9618 - loss: 0.1106 - learning_rate: 0.0010
+Epoch 44/50
+2024-06-01 02:59:37.999702: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 45/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 212s 337ms/step - accuracy: 0.9552 - loss: 0.1411 - learning_rate: 0.0010
+Epoch 46/50
+2024-06-01 03:03:10.084943: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 47/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 149s 237ms/step - accuracy: 0.9603 - loss: 0.1182 - learning_rate: 0.0010
+Epoch 48/50
+2024-06-01 03:05:39.582404: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010
+Epoch 49/50
+625/625 ━━━━━━━━━━━━━━━━━━━━ 88s 140ms/step - accuracy: 0.9609 - loss: 0.1066 - learning_rate: 0.0010
+Epoch 50/50
+2024-06-01 03:07:07.635388: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+625/625 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - accuracy: 0.0000e+00 - loss: 0.0000e+00 - learning_rate: 0.0010

@@ -18,7 +18,6 @@ print("Dataset Directory:", dataset_dir)
 # Create an ImageDataGenerator for loading and augmenting images
 datagen = ImageDataGenerator(
     rescale=1./255,
-    validation_split=0.2,  
     rotation_range=20,
     width_shift_range=0.2,
     height_shift_range=0.2,
@@ -27,21 +26,12 @@ datagen = ImageDataGenerator(
     horizontal_flip=True
 )
 
-# Create training and validation generators
+# Create training generator (without validation split)
 train_generator = datagen.flow_from_directory(
     dataset_dir,
     target_size=(64, 64),
     batch_size=32,
-    class_mode='categorical',  # Change to 'categorical' to handle multiple classes
-    subset='training'
-)
-
-validation_generator = datagen.flow_from_directory(
-    dataset_dir,
-    target_size=(64, 64),
-    batch_size=32,
-    class_mode='categorical',  # Change to 'categorical' to handle multiple classes
-    subset='validation'
+    class_mode='categorical'
 )
 
 # Debug data loading
@@ -49,31 +39,15 @@ print("Training Generator - Batches:", len(train_generator))
 print("Training Generator - Samples per batch:", train_generator.batch_size)
 print("Training Generator - Total samples:", len(train_generator) * train_generator.batch_size)
 
-print("Validation Generator - Batches:", len(validation_generator))
-print("Validation Generator - Samples per batch:", validation_generator.batch_size)
-print("Validation Generator - Total samples:", len(validation_generator) * validation_generator.batch_size)
-
-# Calculate steps per epoch and validation steps
-total_training_samples = 16000
+# Calculate steps per epoch
+total_training_samples = len(train_generator.filenames)
 batch_size = 32
-
 steps_per_epoch = total_training_samples // batch_size
 print("Steps per epoch:", steps_per_epoch)
-
-total_validation_samples = 4000
-validation_batch_size = 32
-
-validation_steps = total_validation_samples // validation_batch_size
-print("Validation steps:", validation_steps)
 
 # Check the shape of a batch from the training generator
 for images, labels in train_generator:
     print("Training Batch Shape - Images:", images.shape, "Labels:", labels.shape)
-    break
-
-# Check the shape of a batch from the validation generator
-for images, labels in validation_generator:
-    print("Validation Batch Shape - Images:", images.shape, "Labels:", labels.shape)
     break
 
 # Build the model
@@ -114,8 +88,6 @@ callbacks = [
 history = model.fit(
     train_generator,
     steps_per_epoch=steps_per_epoch,
-    validation_data=validation_generator,
-    validation_steps=validation_steps,
     epochs=50,  # Increase the number of epochs
     callbacks=callbacks
 )

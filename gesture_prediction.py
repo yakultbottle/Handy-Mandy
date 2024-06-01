@@ -20,8 +20,12 @@ gesture_names = [
 ]
 
 def preprocess_image(image):
+    # Convert image to grayscale
+    grayscale_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # Convert grayscale image back to RGB format
+    rgb_image = cv2.cvtColor(grayscale_image, cv2.COLOR_GRAY2RGB)
     # Resize the image to match the model's input shape
-    resized_image = cv2.resize(image, (64, 64))
+    resized_image = cv2.resize(rgb_image, (64, 64))
     # Normalize the pixel values to the range [0, 1]
     resized_image = resized_image / 255.0
     return resized_image
@@ -89,7 +93,7 @@ def main():
         confidence_bg_start_y = preprocessed_frame_display.shape[0] + 10
         confidence_bg_end_x = canvas_width
         confidence_bg_end_y = canvas_height - 50
-        canvas[confidence_bg_start_y:confidence_bg_end_y, confidence_bg_start_x:confidence_bg_end_x] = (38, 27, 26) # bgr
+        canvas[confidence_bg_start_y:confidence_bg_end_y, confidence_bg_start_x:confidence_bg_end_x] = (38, 27, 26) # RGB: (38, 27, 26)
 
         # Add confidence levels text
         cv2.putText(canvas, "Confidence Levels", (frame.shape[1] + 20, preprocessed_frame_display.shape[0] + 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
@@ -102,7 +106,7 @@ def main():
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2, cv2.LINE_AA)
 
         # Draw grey rectangle at the bottom
-        cv2.rectangle(canvas, (0, canvas_height - 50), (canvas_width, canvas_height), (66, 46, 41), -1) # bgr
+        cv2.rectangle(canvas, (0, canvas_height - 50), (canvas_width, canvas_height), (66, 46, 41), -1) # RGB: (66, 46, 41)
 
         # Add a small gap between "Press 'q' to quit" and the image above
         quit_text = "Press 'q' to quit"

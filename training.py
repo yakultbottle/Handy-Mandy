@@ -8,9 +8,11 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLRO
 
 print(tf.__version__)
 
+# Get the absolute path to the current script's directory
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
 # Define the path to the dataset directory
-base_dir = 'C:/Users/e1121147/OneDrive - National University of Singapore/Documents/School/Y1Summer/Orbital/Milestone_1'
-dataset_dir = os.path.join(base_dir, 'dataset')
+dataset_dir = os.path.join(base_dir, 'leapGestRecog')
 
 # Print the dataset directory path to ensure it's correct
 print("Dataset Directory:", dataset_dir)

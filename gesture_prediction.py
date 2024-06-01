@@ -1,57 +1,76 @@
 import cv2
 import numpy as np
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 
-# Load the trained model
+# Load the saved model
 model = load_model('gesture_recognition_model.keras')
 
-# Dictionary mapping gesture number to gesture label
-gesture_labels = {
-    1: 'palm',
-    2: 'l',
-    3: 'fist',
-    4: 'fist_side',
-    5: 'thumb',
-    6: 'index',
-    7: 'ok',
-    8: 'palm_side',
-    9: 'c',
-    10: 'down'
-}
+# Define the gesture names
+gesture_names = [
+    'palm',
+    'l',
+    'fist',
+    'fist_side',
+    'thumb',
+    'index',
+    'ok',
+    'palm_side',
+    'c',
+    'down'
+]
 
-def predict_gesture(frame, top_n=3):
-    # Preprocess the frame for the model
-    img = cv2.resize(frame, (64, 64))  # Resize the frame to match the input size of the model
-    img = np.expand_dims(img, axis=0)
-    img = img / 255.0  # Normalize pixel values
+def preprocess_image(image):
+    # Resize the image to match the model's input shape
+    resized_image = cv2.resize(image, (64, 64))
+    # Normalize the pixel values to the range [0, 1]
+    resized_image = resized_image / 255.0
+    return resized_image
 
-    # Predict the gesture
-    predictions = model.predict(img)[0]
-
-    # Get top n predictions and their corresponding labels and confidence levels
-    top_indices = np.argsort(predictions)[-top_n:][::-1]
-    top_predictions = predictions[top_indices]
-    top_labels = [gesture_labels.get(idx + 1, 'Unknown') for idx in top_indices]
-
-    return top_labels, top_predictions
+def predict_image(image):
+    # Preprocess the image
+    processed_image = preprocess_image(image)
+    # Reshape the image to match the input shape of the model
+    processed_image = np.expand_dims(processed_image, axis=0)
+    # Perform prediction
+    pred_array = model.predict(processed_image)
+    # Get the predicted gesture label
+    result = gesture_names[np.argmax(pred_array)]
+    # Calculate the confidence score
+    score = float("%0.2f" % (np.max(pred_array) * 100))
+    print(f'Result: {result}, Score: {score}')
+    return result, score
 
 def main():
     # Open the webcam
     camera = cv2.VideoCapture(0)
 
+    # Check if the camera is opened successfully
+    if not camera.isOpened():
+        print("Error: Unable to open the webcam.")
+        return
+
     while True:
         # Read a frame from the webcam
         ret, frame = camera.read()
+
+        # Check if the frame is read successfully
         if not ret:
+            print("Error: Unable to read frame from the webcam.")
             break
 
+        # Print the shape of the frame before resizing
+        print(f"Frame shape before resize: {frame.shape}")
+
         # Perform gesture prediction
-        top_labels, top_predictions = predict_gesture(frame, top_n=3)
+        if frame.shape[0] == 0 or frame.shape[1] == 0:
+            print("Error: Invalid frame shape. Skipping prediction.")
+            continue
+
+        result, score = predict_image(frame)
 
         # Display the frame with the predicted gesture label and confidence level
-        for i, (label, confidence) in enumerate(zip(top_labels, top_predictions)):
-            text = f'{label}: {confidence:.2f}'
-            cv2.putText(frame, text, (10, 50 + 30 * i), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        text = f'{result}: {score}%'
+        cv2.putText(frame, text, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
         cv2.imshow('Webcam Feed', frame)
 

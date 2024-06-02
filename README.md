@@ -51,12 +51,12 @@ pip install -r ./requirements_run.txt
 
 Windows Powershell:
 ```powershell
-python .\gesture_recognition.py
+python3 .\gesture_recognition.py
 ```
 
 MacOS/Linux bash:
 ```bash
-python ./gesture_recognition.py
+python3 ./gesture_recognition.py
 ```
 
 ## Instructions on training the model
@@ -93,10 +93,10 @@ pip install -r requirements_train.txt
 4. Run the training model(will take a long time, like possibly 2h+)
 Windows Powershell:
 ```powershell
-python .\training.py
+python3 .\training.py
 ```
 
 MacOS/Linux bash:
 ```bash
-python ./training.py
+python3 ./training.py
 ```

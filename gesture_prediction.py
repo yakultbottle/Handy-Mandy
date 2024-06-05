@@ -1,6 +1,10 @@
 import cv2
+import requests
 import numpy as np
 from keras.models import load_model
+
+# URL for ESP32 video stream
+url = 'http://192.168.0.172/capture'  # Ensure the correct endpoint for the image capture
 
 # Load the saved model
 model = load_model('gesture_recognition_model.keras')
@@ -42,22 +46,15 @@ def predict_image(image):
     return predictions
 
 def main():
-    # Open the webcam
-    camera = cv2.VideoCapture(0)
-
-    # Check if the camera is opened successfully
-    if not camera.isOpened():
-        print("Error: Unable to open the webcam.")
-        return
-
     while True:
-        # Read a frame from the webcam
-        ret, frame = camera.read()
-
-        # Check if the frame is read successfully
-        if not ret:
-            print("Error: Unable to read frame from the webcam.")
-            break
+        # Read a frame from the ESP32-CAM
+        response = requests.get(url)
+        if response.status_code == 200:
+            img_array = np.array(bytearray(response.content), dtype=np.uint8)
+            frame = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+        else:
+            print("Failed to get frame from ESP32-CAM")
+            continue
 
         # Perform gesture prediction
         if frame.shape[0] == 0 or frame.shape[1] == 0:
@@ -93,7 +90,7 @@ def main():
         confidence_bg_start_y = preprocessed_frame_display.shape[0] + 10
         confidence_bg_end_x = canvas_width
         confidence_bg_end_y = canvas_height - 50
-        canvas[confidence_bg_start_y:confidence_bg_end_y, confidence_bg_start_x:confidence_bg_end_x] = (38, 27, 26) # RGB: (38, 27, 26)
+        canvas[confidence_bg_start_y:confidence_bg_end_y, confidence_bg_start_x:confidence_bg_end_x] = (38, 27, 26)  # RGB: (38, 27, 26)
 
         # Add confidence levels text
         cv2.putText(canvas, "Confidence Levels", (frame.shape[1] + 20, preprocessed_frame_display.shape[0] + 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
@@ -106,7 +103,7 @@ def main():
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2, cv2.LINE_AA)
 
         # Draw grey rectangle at the bottom
-        cv2.rectangle(canvas, (0, canvas_height - 50), (canvas_width, canvas_height), (66, 46, 41), -1) # RGB: (66, 46, 41)
+        cv2.rectangle(canvas, (0, canvas_height - 50), (canvas_width, canvas_height), (66, 46, 41), -1)  # RGB: (66, 46, 41)
 
         # Add a small gap between "Press 'q' to quit" and the image above
         quit_text = "Press 'q' to quit"
@@ -123,7 +120,6 @@ def main():
             break
 
     # Release the camera and close all OpenCV windows
-    camera.release()
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':

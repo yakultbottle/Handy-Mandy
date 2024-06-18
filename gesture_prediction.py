@@ -23,18 +23,32 @@ gesture_names = [
     'thumbs down'
 ]
 
-# Create a background subtractor object
-bg_subtractor = cv2.createBackgroundSubtractorMOG2(history=500, varThreshold=50, detectShadows=False)
+# Initialize region and thresholding parameters
+cap_region_y_end = 0.8  # Adjust the region as needed
+cap_region_x_begin = 0.5  # Adjust the region as needed
+blurValue = 41
+threshold = 127
 
 def preprocess_image(image):
-    # Background Subtraction
-    fg_mask = bg_subtractor.apply(image)
-    # Binary Thresholding
-    _, binary_image = cv2.threshold(fg_mask, 127, 255, cv2.THRESH_BINARY)
+    # Clip the ROI
+    img = image[0:int(cap_region_y_end * image.shape[0]),
+                int(cap_region_x_begin * image.shape[1]):image.shape[1]]
+
+    # Convert to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # Apply Gaussian blur
+    blur = cv2.GaussianBlur(gray, (blurValue, blurValue), 0)
+    
+    # Apply binary thresholding
+    _, thresh = cv2.threshold(blur, threshold, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    
     # Convert binary image to RGB format
-    rgb_image = cv2.cvtColor(binary_image, cv2.COLOR_GRAY2RGB)
+    rgb_image = cv2.cvtColor(thresh, cv2.COLOR_GRAY2RGB)
+    
     # Resize the image to match the model's input shape
     resized_image = cv2.resize(rgb_image, (64, 64))
+    
     # Normalize the pixel values to the range [0, 1]
     resized_image = resized_image / 255.0
     return resized_image
@@ -75,7 +89,7 @@ def main():
         preprocessed_frame_display = (preprocessed_frame_display * 255).astype(np.uint8)
 
         # Create a blank canvas
-        canvas_height = frame.shape[0] + 150
+        canvas_height = frame.shape[0] + 230
         canvas_width = frame.shape[1] * 2 + 20
         canvas = np.zeros((canvas_height, canvas_width, 3), dtype=np.uint8)
 

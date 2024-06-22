@@ -20,57 +20,18 @@ cap.set(4, hCam)
 detector = htm.handDetector(maxHands=1)
 
 while True:
-    # Find hand landmarks
-    fingers = [0, 0, 0, 0, 0]
     success, img = cap.read()
-
     img = cv2.flip(img, 1)
-
     img = detector.findHands(img)
     lmList, bbox = detector.findPosition(img)
 
-    # Get the tip of the index and middle fingers
     if len(lmList) != 0:
-        # Check which fingers are up
-        fingers = detector.fingersUp()
-        # Check palm facing camera or not
-        palm_orientation = detector.detectPalmOrientation()
+        palmOrientation = detector.detectPalmOrientation()
+        fingers = detector.fingersUp(palmOrientation)
+        gesture = detector.detectGestures(fingers, palmOrientation)
 
-        # if fingers == [1, 1, 1, 1, 1]:
-        #     cv2.putText(img, "Open Palm", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-
-        # if fingers == [0, 0, 0, 0, 0]:
-        #     cv2.putText(img, "Closed Fist", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-
-        if fingers == [1, 1, 1, 1, 1]:
-            if palm_orientation == "facing towards":
-                cv2.putText(img, "Open Palm (Facing Towards)", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-            elif palm_orientation == "facing away":
-                cv2.putText(img, "Open Palm (Facing Away)", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-
-        if fingers == [0, 0, 0, 0, 0]:
-            cv2.putText(img, "Closed Fist", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-        
-        # # Only index finger
-        # if fingers[1] == 1 and fingers[2] == 0:
-        #     # Convert coordinates
-        #     x3 = np.interp(x1, (frameR, wCam - frameR), (0, wCam))
-        #     y3 = np.interp(y1, (frameR, hCam - frameR), (0, hCam))
-        #     # Smoothen values
-        #     clocX = plocX + (x3 - plocX) / smoothening
-        #     clocY = plocY + (y3 - plocY) / smoothening
-
-        #     # Draw a circle at the tip of the index finger
-        #     cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
-        #     plocX, plocY = clocX, clocY
-        
-        # # Both index and middle fingers are up: Clicking mode
-        # if fingers[1] == 1 and fingers[2] == 1:
-        #     # Find distance between fingers
-        #     length, img, lineInfo = detector.findDistance(8, 12, img)
-        #     # Indicate click when fingers are close
-        #     if length < 40:
-        #         cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
+        if gesture:
+            cv2.putText(img, gesture, (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
 
     # Frame rate calculation
     cTime = time.time()

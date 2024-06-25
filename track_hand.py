@@ -145,5 +145,8 @@ class handDetector():
                     gesture = "Closed Fist (Thumb Left)"
                 else:
                     gesture = "Closed Fist (Thumb Right)"
+        
+        elif fingers == [0, 0, 1, 0, 0]:
+            gesture = "Middle finger"
 
         return gesture

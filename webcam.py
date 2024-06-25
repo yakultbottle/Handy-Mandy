@@ -1,5 +1,5 @@
 import numpy as np
-import track_hand as htm
+import handGesture as htm
 import time
 import cv2
 

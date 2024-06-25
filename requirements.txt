@@ -1,0 +1,5 @@
+cv2
+mediapipe
+numpy
+track_hand
+time

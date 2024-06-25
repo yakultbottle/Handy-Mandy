@@ -2,7 +2,7 @@
 
 ## Webcam Gesture Recognition Model Instructions
 
-This document provides instructions for setting up and running the gesture recognition model on your webcam, as well as instructions for training the model from scratch. 
+This document provides instructions for setting up and running the gesture recognition model on your webcam
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ This document provides instructions for setting up and running the gesture recog
 
 Windows Powershell:
 ```powershell
-python3 -m venv myenv
+python -m venv myenv
 myenv\Scripts\activate
 cd "myenv"
 ```
@@ -29,74 +29,43 @@ source myenv/bin/activate
 cd "myenv"
 ```
 
-1. Clone the repo in the virtual environment or any other suitable place (this might take a while)
-   
-```bash
-git clone git@github.com:yakultbottle/Handy-Mandy.git
-```
+1. Unzip the folder into virtual environment
 
 2. Install all dependencies
 
 Windows Powershell:
 ```
 cd "Handy Mandy"
-pip install -r .\requirements_run.txt
+pip install -r .\requirements.txt
 ```
 
 MacOS/Linux bash:
 ```bash
-pip install -r ./requirements_run.txt
+cd "Handy Mandy"
+pip install -r ./requirements.txt
 ```
-3. Run the model (**Note:** this will not ask for permission before running your webcam!)
+3. Adjust the settings on the model
+
+Webcam dimensions(Line 7, webcam.py) 
+```
+wCam, hCam = 1280, 720
+```
+
+4. Run the model (**Note:** this will not ask for permission before running your webcam!)
 
 Windows Powershell:
 ```powershell
-python3 .\gesture_recognition.py
+python3 .\webcam.py
 ```
 
 MacOS/Linux bash:
 ```bash
-python3 ./gesture_recognition.py
+python3 ./webcam.py
 ```
 
-## Instructions on training the model
-This assumes you have already followed the instructions on running the model above
-1. Download the [Hand Gesture Recognition Database](https://www.kaggle.com/datasets/gti-upm/leapgestrecog) from Kaggle(note: it is huge, this will take forever)
-2. When you first unzip the folder, you will get something like this:
-```
-/archive
-  /leapGestRecog
-    /00
-      ..
-    /01
-      ..
-    /02
-      ..
-    ..
-    /leapGestRecog
-```
-There is a duplicate folder inside the first leapGestRecog folder that is not needed. Place the main leapGestRecog folder into the project directory like so(without the duplicate inside):
-```
-/Handy Mandy
-  /leapGestRecog
-    /00
-      ..
-    /01
-      ..
-    ..
-  /gesture_recognition.py
-```
-3. Install all dependencies
-```
-pip install -r requirements_train.txt
-```
-4. Run the training model(will take a long time, like possibly 2h+)
-Windows Powershell:
-```powershell
-python3 .\training.py
-```
+5. If left/right hand is not accurately determined, check the following settings in the model:
 
-MacOS/Linux bash:
-```bash
-python3 ./training.py
+Comment out Line 24, webcam.py
+```
+img = cv2.flip(img, 1)
 ```

@@ -1,7 +1,5 @@
 import cv2
 import mediapipe as mp
-# import time
-# import math
 import numpy as np
  
  
@@ -25,6 +23,7 @@ class handDetector():
         
         if self.results.multi_handedness:
             self.handLabel = self.results.multi_handedness[0].classification[0].label  # Extract hand label
+            cv2.putText(img, self.handLabel, (50, 150), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
 
         if self.results.multi_hand_landmarks:
             for handLms in self.results.multi_hand_landmarks:

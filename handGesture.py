@@ -18,8 +18,9 @@ class handDetector():
         self.handLabel = None  # Attribute to store hand label
 
     def findHands(self, img, draw=True):
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        self.results = self.hands.process(imgRGB)
+        # imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        self.results = self.hands.process(img)
+        # self.results = self.hands.process(imgRGB)
         
         if self.results.multi_handedness:
             self.handLabel = self.results.multi_handedness[0].classification[0].label  # Extract hand label

@@ -4,7 +4,7 @@ import time
 import cv2
 
 # Camera parameters
-wCam, hCam = 1280, 720
+wCam, hCam = 320, 240
 frameR = 100  # Frame Reduction
 smoothening = 7
 
@@ -13,8 +13,10 @@ pTime = 0
 plocX, plocY = 0, 0
 clocX, clocY = 0, 0
 
+url = 'http://172.20.10.11'
+
 # Initialize the webcam
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(url + ":81/stream")
 cap.set(3, wCam)
 cap.set(4, hCam)
 detector = htm.handDetector(maxHands=1)

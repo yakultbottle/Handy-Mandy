@@ -1,4 +1,5 @@
 cv2
+requests
 mediapipe
 numpy
 track_hand

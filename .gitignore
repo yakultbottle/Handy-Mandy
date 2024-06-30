@@ -3,3 +3,4 @@ __pycache__/
 leapGestRecog/
 logs/
 old_training/
+CameraWebServer/wifi_config.h

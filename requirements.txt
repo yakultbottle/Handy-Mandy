@@ -1,6 +1,6 @@
 cv2
 requests
 mediapipe
-numpy
+# numpy
 track_hand
 time

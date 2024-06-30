@@ -1,4 +1,4 @@
-import numpy as np
+# import numpy as np
 import requests
 import handGesture as htm
 import time
@@ -67,10 +67,10 @@ def set_default_settings(url: str):
     #  4 –> QVGA(320×240)
     #  3 –> HQVGA(240×176)
     #  0 –> QQVGA(160×120)
-    set_resolution(url, index=6)
-    set_quality(url, value=30)  # Quality is from 10-63, lower number is higher quality
-    awb = 1  # Assume AWB is initially enabled
-    awb = set_awb(url, awb)       # Toggle AWB
+    set_resolution(url, index=6) # VGA
+    set_quality(url, value=30)   # Quality is from 10-63, lower number is higher quality
+    awb = 1                      # Assume AWB is initially enabled
+    awb = set_awb(url, awb)      # Toggle AWB
     print("Default settings applied.")
 
 url = 'http://172.20.10.11'

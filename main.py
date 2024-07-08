@@ -5,7 +5,7 @@ import time
 import cv2
 
 # Camera parameters
-wCam, hCam = 320, 240
+wCam, hCam = 1024, 768
 frameR = 100  # Frame Reduction
 smoothening = 7
 
@@ -67,13 +67,13 @@ def set_default_settings(url: str):
     #  4 –> QVGA(320×240)
     #  3 –> HQVGA(240×176)
     #  0 –> QQVGA(160×120)
-    set_resolution(url, index=6) # VGA
-    set_quality(url, value=30)   # Quality is from 10-63, lower number is higher quality
+    set_resolution(url, index=8) # VGA
+    set_quality(url, value=10)   # Quality is from 10-63, lower number is higher quality
     awb = 1                      # Assume AWB is initially enabled
     awb = set_awb(url, awb)      # Toggle AWB
     print("Default settings applied.")
 
-url = 'http://172.20.10.11'
+url = 'http://172.20.10.13'
 set_default_settings(url)
 
 # Initialize the webcam
@@ -84,7 +84,8 @@ detector = htm.handDetector(maxHands=1)
 
 while True:
     success, img = cap.read()
-    img = cv2.flip(img, 1)
+    img = cv2.flip(img, 1) # Left/Right flip
+    img = cv2.flip(img, 0) # Up/Down flip
     img = detector.findHands(img)
     lmList, bbox = detector.findPosition(img)
 

@@ -1,29 +1,36 @@
-# import numpy as np
 import requests
 import handGesture as htm
 import time
 import cv2
 
-# Camera parameters
-wCam, hCam = 1024, 768
-frameR = 100  # Frame Reduction
-smoothening = 7
+# Camera resolutions dictionary
+resolutions = {
+    10: (1600, 1200),  # UXGA
+    9:  (1280, 1024),  # SXGA
+    8:  (1024, 768),   # XGA
+    7:  (800, 600),    # SVGA
+    6:  (640, 480),    # VGA
+    5:  (400, 296),    # CIF
+    4:  (320, 240),    # QVGA
+    3:  (240, 176),    # HQVGA
+    0:  (160, 120)     # QQVGA
+}
 
-# Previous and current location for smoothing
-pTime = 0
-plocX, plocY = 0, 0
-clocX, clocY = 0, 0
+resolution_index = 8
+wCam, hCam = resolutions[resolution_index]
 
 def set_resolution(url: str, index: int=1, verbose: bool=False):
+    global wCam, hCam
     try:
         if verbose:
-            resolutions = "10: UXGA(1600x1200)\n9: SXGA(1280x1024)\n8: XGA(1024x768)\n7: SVGA(800x600)\n6: VGA(640x480)\n5: CIF(400x296)\n4: QVGA(320x240)\n3: HQVGA(240x176)\n0: QQVGA(160x120)"
-            print("available resolutions\n{}".format(resolutions))
+            res_text = "\n".join([f"{key}: {val[0]}x{val[1]}" for key, val in resolutions.items()])
+            print("available resolutions\n{}".format(res_text))
 
-        if index in [10, 9, 8, 7, 6, 5, 4, 3, 0]:
+        if index in resolutions:
             response = requests.get(url + "/control?var=framesize&val={}".format(index))
             if response.status_code == 200:
-                print("Resolution set to index", index)
+                wCam, hCam = resolutions[index]
+                print("Resolution set to index", index, ":", wCam, "x", hCam)
             else:
                 print("Failed to set resolution")
         else:
@@ -33,7 +40,7 @@ def set_resolution(url: str, index: int=1, verbose: bool=False):
 
 def set_quality(url: str, value: int=1, verbose: bool=False):
     try:
-        if value >= 10 and value <=63:
+        if value >= 10 and value <= 63:
             response = requests.get(url + "/control?var=quality&val={}".format(value))
             if response.status_code == 200:
                 print("Quality set to", value)
@@ -58,16 +65,7 @@ def set_awb(url: str, awb: int=1):
 
 def set_default_settings(url: str):
     print("Setting default settings...")
-    # 10 –> UXGA(1600×1200)
-    #  9 –> SXGA(1280×1024)
-    #  8 –> XGA(1024×768)
-    #  7 –> SVGA(800×600)
-    #  6 –> VGA(640×480)
-    #  5 —> CIF(400×296)
-    #  4 –> QVGA(320×240)
-    #  3 –> HQVGA(240×176)
-    #  0 –> QQVGA(160×120)
-    set_resolution(url, index=8) # VGA
+    set_resolution(url, index=resolution_index)  # Use default resolution index
     set_quality(url, value=10)   # Quality is from 10-63, lower number is higher quality
     awb = 1                      # Assume AWB is initially enabled
     awb = set_awb(url, awb)      # Toggle AWB
@@ -80,14 +78,18 @@ set_default_settings(url)
 cap = cv2.VideoCapture(url + ":81/stream")
 cap.set(3, wCam)
 cap.set(4, hCam)
-detector = htm.handDetector(maxHands=1)
+detector = htm.handDetector(maxHands=1, modelComplexity=0)  # Lower model complexity for better performance
+
+pTime = 0  # Initialize pTime for FPS calculation
 
 while True:
     success, img = cap.read()
-    img = cv2.flip(img, 1) # Left/Right flip
-    img = cv2.flip(img, 0) # Up/Down flip
-    img = detector.findHands(img)
-    lmList, bbox = detector.findPosition(img)
+    if not success:
+        break
+
+    img = cv2.flip(img, 0)  # Up/Down flip
+    img = detector.findHands(img, draw=False)
+    lmList, bbox = detector.findPosition(img, draw=False)
 
     if len(lmList) != 0:
         palmOrientation = detector.detectPalmOrientation()
@@ -95,7 +97,20 @@ while True:
         gesture = detector.detectGestures(fingers, palmOrientation)
 
         if gesture:
+            # # Send the gesture to ESP32
+            # try:
+            #     response = requests.post(url + '/gesture', json={"gesture": gesture})
+            #     if response.status_code == 200:
+            #         print("Gesture sent:", gesture)
+            #     else:
+            #         print("Failed to send gesture")
+            # except Exception as e:
+            #     print("SEND_GESTURE: something went wrong", e)
+            
             cv2.putText(img, gesture, (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
+        cv2.putText(img, "Hand Detected", (50, 200), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
+    else:
+        cv2.putText(img, "No Hand Detected", (50, 200), cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3)
 
     # Frame rate calculation
     cTime = time.time()

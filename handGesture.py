@@ -1,6 +1,5 @@
 import cv2
 import mediapipe as mp
-# import numpy as np
  
  
 class handDetector():
@@ -18,12 +17,10 @@ class handDetector():
         self.handLabel = None  # Attribute to store hand label
 
     def findHands(self, img, draw=True):
-        # imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(img)
-        # self.results = self.hands.process(imgRGB)
         
         if self.results.multi_handedness:
-            self.handLabel = self.results.multi_handedness[0].classification[0].label  # Extract hand label
+            self.handLabel = self.results.multi_handedness[0].classification[0].label
             cv2.putText(img, self.handLabel, (50, 150), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
 
         if self.results.multi_hand_landmarks:
@@ -33,10 +30,10 @@ class handDetector():
         return img
 
     def findPosition(self, img, handNo=0, draw=True):
+        self.lmList = []
         xList = []
         yList = []
         bbox = []
-        self.lmList = []
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handNo]
             for id, lm in enumerate(myHand.landmark):
@@ -48,14 +45,6 @@ class handDetector():
                 if draw:
                     cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
-            xmin, xmax = min(xList), max(xList)
-            ymin, ymax = min(yList), max(yList)
-            bbox = xmin, ymin, xmax, ymax
-
-            if draw:
-                cv2.rectangle(img, (xmin - 20, ymin - 20), (xmax + 20, ymax + 20),
-                              (0, 255, 0), 2)
-
         return self.lmList, bbox
 
     def fingersUp(self, palmOrientation):
@@ -63,41 +52,18 @@ class handDetector():
         # Thumb
         if self.handLabel == "Right":
             if palmOrientation == "facing towards":
-                if self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0] - 1][1]:
-                    fingers.append(1)
-                    # print(f"Right, towards, stick out")
-                else:
-                    fingers.append(0)
-                    # print(f"Right, towards, stick in")
-            else:  # facing away
-                if self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0] - 1][1]:
-                    fingers.append(0)
-                    # print(f"Right, away, stick in")
-                else:
-                    fingers.append(1)
-                    # print(f"Right, away, stick out")
+                fingers.append(int(self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0] - 1][1]))
+            else:
+                fingers.append(int(self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]))
         elif self.handLabel == "Left":
             if palmOrientation == "facing towards":
-                if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]:
-                    fingers.append(1)
-                    # print(f"Left, towards, stick out")
-                else:
-                    fingers.append(0)
-                    # print(f"Left, towards, stick in")
-            else:  # facing away
-                if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]:
-                    fingers.append(0)
-                    # print(f"Left, away, stick in")
-                else:
-                    fingers.append(1)
-                    # print(f"Left, away, stick out")
+                fingers.append(int(self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]))
+            else:
+                fingers.append(int(self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0] - 1][1]))
 
         # Fingers
         for id in range(1, 5):
-            if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id] - 2][2]:
-                fingers.append(1)
-            else:
-                fingers.append(0)
+            fingers.append(int(self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id] - 2][2]))
 
         return fingers
 
@@ -108,45 +74,21 @@ class handDetector():
         thumb_tip_x = self.lmList[4][1]
         pinky_tip_x = self.lmList[20][1]
 
-        palm_direction = None
-
         if self.handLabel == "Right":
-            if thumb_tip_x < pinky_tip_x:
-                palm_direction = "facing towards"
-            else:
-                palm_direction = "facing away"
-        elif self.handLabel == "Left":
-            if thumb_tip_x > pinky_tip_x:
-                palm_direction = "facing towards"
-            else:
-                palm_direction = "facing away"
+            palm_direction = "facing towards" if thumb_tip_x < pinky_tip_x else "facing away"
+        else:
+            palm_direction = "facing towards" if thumb_tip_x > pinky_tip_x else "facing away"
 
-        # print(f"Palm Orientation: {palm_direction}")
         return palm_direction
 
     def detectGestures(self, fingers, palmOrientation):
-        gesture = None
-
         if fingers == [1, 1, 1, 1, 1]:
-            if palmOrientation == "facing towards":
-                gesture = "Open Palm (Stop)"
-            elif palmOrientation == "facing away":
-                gesture = "Open Palm (Go)"
-
+            return "Open Palm (Stop)" if palmOrientation == "facing towards" else "Open Palm (Go)"
         elif fingers == [1, 0, 0, 0, 0]:
-            # Check thumb direction for a closed fist with thumb sticking out
             if self.handLabel == "Right":
-                if self.lmList[4][1] > self.lmList[3][1]:
-                    gesture = "Closed Fist (Thumb Right)"
-                else:
-                    gesture = "Closed Fist (Thumb Left)"
-            elif self.handLabel == "Left":
-                if self.lmList[4][1] < self.lmList[3][1]:
-                    gesture = "Closed Fist (Thumb Left)"
-                else:
-                    gesture = "Closed Fist (Thumb Right)"
-        
+                return "Closed Fist (Thumb Right)" if self.lmList[4][1] > self.lmList[3][1] else "Closed Fist (Thumb Left)"
+            else:
+                return "Closed Fist (Thumb Left)" if self.lmList[4][1] < self.lmList[3][1] else "Closed Fist (Thumb Right)"
         elif fingers == [0, 0, 1, 0, 0]:
-            gesture = "Middle finger"
-
-        return gesture
+            return "Middle finger"
+        return None

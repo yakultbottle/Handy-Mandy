@@ -100,6 +100,10 @@ static const char *_STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %
 httpd_handle_t stream_httpd = NULL;
 httpd_handle_t camera_httpd = NULL;
 
+// Global variable to store the received gesture
+// static int received_gesture = -1;
+char *received_gesture = NULL;
+
 #if CONFIG_ESP_FACE_DETECT_ENABLED
 
 static int8_t detection_enabled = 0;
@@ -1140,6 +1144,24 @@ static esp_err_t index_handler(httpd_req_t *req) {
   }
 }
 
+// NEW function for receiving predicted gestures
+static esp_err_t gesture_post_handler(httpd_req_t *req) {
+  char content[100];
+  int ret = httpd_req_recv(req, content, sizeof(content));
+  if (ret <= 0) {
+    if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+      httpd_resp_send_408(req);
+    }
+    return ESP_FAIL;
+  }
+
+  content[ret] = '\0';
+  received_gesture = strdup(content);
+
+  httpd_resp_send(req, "Gesture received", HTTPD_RESP_USE_STRLEN);
+  return ESP_OK;
+}
+
 void startCameraServer() {
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
   config.max_uri_handlers = 16;
@@ -1287,6 +1309,20 @@ void startCameraServer() {
 #endif
   };
 
+  // NEW to receive predicted gesture from python side
+  httpd_uri_t gesture_uri = {
+      .uri       = "/gesture",
+      .method    = HTTP_POST,
+      .handler   = gesture_post_handler,
+      .user_ctx  = NULL
+#ifdef CONFIG_HTTPD_WS_SUPPORT
+    ,
+    .is_websocket = true,
+    .handle_ws_control_frames = false,
+    .supported_subprotocol = NULL
+#endif
+  };
+
   ra_filter_init(&ra_filter, 20);
 
 #if CONFIG_ESP_FACE_RECOGNITION_ENABLED
@@ -1308,6 +1344,8 @@ void startCameraServer() {
     httpd_register_uri_handler(camera_httpd, &greg_uri);
     httpd_register_uri_handler(camera_httpd, &pll_uri);
     httpd_register_uri_handler(camera_httpd, &win_uri);
+
+    httpd_register_uri_handler(camera_httpd, &gesture_uri);
   }
 
   config.server_port += 1;

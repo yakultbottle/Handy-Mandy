@@ -11,6 +11,8 @@
 // ===========================
 #include "wifi_config.h"
 
+extern char *received_gesture;
+
 void startCameraServer();
 void setupLedFlash(int pin);
 
@@ -108,6 +110,12 @@ void setup() {
 }
 
 void loop() {
+  // Print the received gesture if it's not NULL
+  if (received_gesture) {
+    Serial.printf("Received gesture: %s\n", received_gesture);
+    received_gesture = NULL; // Clear the received gesture after printing
+  }
+
   // Do nothing. Everything is done in another task by the web server
   vTaskDelay(10000 / portTICK_PERIOD_MS);  // Non-blocking delay
 }

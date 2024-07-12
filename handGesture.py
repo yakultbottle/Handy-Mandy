@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
- 
- 
+
+
 class handDetector():
     def __init__(self, mode=False, maxHands=1, modelComplexity=1, detectionCon=0.5, trackCon=0.5):
         self.mode = mode
@@ -81,14 +81,26 @@ class handDetector():
 
         return palm_direction
 
+    # def detectGestures(self, fingers, palmOrientation):
+    #     if fingers == [1, 1, 1, 1, 1]:
+    #         return "Open Palm (Stop)" if palmOrientation == "facing towards" else "Open Palm (Go)"
+    #     elif fingers == [1, 0, 0, 0, 0]:
+    #         if self.handLabel == "Right":
+    #             return "Closed Fist (Thumb Right)" if self.lmList[4][1] > self.lmList[3][1] else "Closed Fist (Thumb Left)"
+    #         else:
+    #             return "Closed Fist (Thumb Left)" if self.lmList[4][1] < self.lmList[3][1] else "Closed Fist (Thumb Right)"
+    #     elif fingers == [0, 0, 1, 0, 0]:
+    #         return "Middle finger"
+    #     return None
+
     def detectGestures(self, fingers, palmOrientation):
         if fingers == [1, 1, 1, 1, 1]:
-            return "Open Palm (Stop)" if palmOrientation == "facing towards" else "Open Palm (Go)"
+            return "Stop" if palmOrientation == "facing towards" else "Go"
         elif fingers == [1, 0, 0, 0, 0]:
             if self.handLabel == "Right":
-                return "Closed Fist (Thumb Right)" if self.lmList[4][1] > self.lmList[3][1] else "Closed Fist (Thumb Left)"
+                return "Right" if self.lmList[4][1] > self.lmList[3][1] else "Left"
             else:
-                return "Closed Fist (Thumb Left)" if self.lmList[4][1] < self.lmList[3][1] else "Closed Fist (Thumb Right)"
+                return "Left" if self.lmList[4][1] < self.lmList[3][1] else "Right"
         elif fingers == [0, 0, 1, 0, 0]:
-            return "Middle finger"
+            return "Middle Finger"
         return None

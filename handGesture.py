@@ -81,18 +81,6 @@ class handDetector():
 
         return palm_direction
 
-    # def detectGestures(self, fingers, palmOrientation):
-    #     if fingers == [1, 1, 1, 1, 1]:
-    #         return "Open Palm (Stop)" if palmOrientation == "facing towards" else "Open Palm (Go)"
-    #     elif fingers == [1, 0, 0, 0, 0]:
-    #         if self.handLabel == "Right":
-    #             return "Closed Fist (Thumb Right)" if self.lmList[4][1] > self.lmList[3][1] else "Closed Fist (Thumb Left)"
-    #         else:
-    #             return "Closed Fist (Thumb Left)" if self.lmList[4][1] < self.lmList[3][1] else "Closed Fist (Thumb Right)"
-    #     elif fingers == [0, 0, 1, 0, 0]:
-    #         return "Middle finger"
-    #     return None
-
     def detectGestures(self, fingers, palmOrientation):
         if fingers == [1, 1, 1, 1, 1]:
             return "Stop" if palmOrientation == "facing towards" else "Go"

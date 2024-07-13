@@ -16,6 +16,9 @@ resolutions = {
     0:  (160, 120)     # QQVGA
 }
 
+resolution_index = 8
+wCam, hCam = resolutions[resolution_index]
+
 def send_gesture(url: str, gesture: str):
     try:
         response = requests.post(url + "/gesture", gesture)
@@ -26,16 +29,13 @@ def send_gesture(url: str, gesture: str):
     except Exception as e:
         print("SEND_GESTURE: something went wrong")
 
-resolution_index = 8
-wCam, hCam = resolutions[resolution_index]
-
 url = 'http://172.20.10.13'
 
 # Initialize the webcam
 cap = cv2.VideoCapture(url + ":81/stream")
 cap.set(3, wCam)
 cap.set(4, hCam)
-detector = htm.handDetector(maxHands=1, modelComplexity=0)  # Lower model complexity for better performance
+detector = htm.handDetector(maxHands=1, modelComplexity=1)
 
 pTime = 0  # Initialize pTime for FPS calculation
 
@@ -56,21 +56,22 @@ while True:
         if gesture:
             send_gesture(url, gesture)
             
-            cv2.putText(img, gesture, (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-        cv2.putText(img, "Hand Detected", (50, 200), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-    else:
-        cv2.putText(img, "No Hand Detected", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3)
+    #         cv2.putText(img, gesture, (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
+    #     cv2.putText(img, "Hand Detected", (50, 200), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
+    # else:
+    #     cv2.putText(img, "No Hand Detected", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3)
 
     # Frame rate calculation
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
-    cv2.putText(img, str(int(fps)), (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+    print("FPS:", int(fps))
+    # cv2.putText(img, str(int(fps)), (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
-    # Display
-    cv2.imshow("Image", img)
+    # # Display
+    # cv2.imshow("Image", img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()

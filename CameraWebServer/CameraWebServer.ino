@@ -117,7 +117,7 @@ void loop() {
   }
 
   // Do nothing. Everything is done in another task by the web server
-  vTaskDelay(10000 / portTICK_PERIOD_MS);  // Non-blocking delay
+  // vTaskDelay(10000 / portTICK_PERIOD_MS);  // Non-blocking delay
 }
 
 // Task for controlling servos

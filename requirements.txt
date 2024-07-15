@@ -1,5 +1,3 @@
-cv2
-# requests
+open-cv
+requests
 mediapipe
-track_hand
-time

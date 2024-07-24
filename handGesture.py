@@ -89,6 +89,8 @@ class handDetector():
                 return "Right" if self.lmList[4][1] > self.lmList[3][1] else "Left"
             else:
                 return "Left" if self.lmList[4][1] < self.lmList[3][1] else "Right"
+        elif fingers == [0, 1, 1, 0, 0]:
+            return "Dance"
         elif fingers == [0, 0, 1, 0, 0]:
             return "Middle Finger"
         return None

@@ -3,8 +3,10 @@
 // #include "freertos/FreeRTOS.h"
 // #include "freertos/task.h"
 
-#define CAMERA_MODEL_AI_THINKER // Has PSRAM
+#define CAMERA_MODEL_AI_THINKER  // Has PSRAM
 #include "camera_pins.h"
+#include <ESP32Servo.h>
+#include "servo_code.h"
 
 // ===========================
 // Enter your WiFi credentials
@@ -100,33 +102,58 @@ void setup() {
   Serial.println("WiFi connected");
 
   startCameraServer();
-
+  setupServo();
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
 
-  // Create a new task for controlling servos
-  xTaskCreate(controlServos, "ServoControlTask", 2048, NULL, 1, NULL);
+
+  // // Create a new task for controlling servos
+  // xTaskCreate(controlServos, "ServoControlTask", 2048, NULL, 1, NULL);
 }
 
 void loop() {
   // Print the received gesture if it's not NULL
+  // if (received_gesture) {
+  //   Serial.printf("Received gesture: %s\n", received_gesture);
+  //   received_gesture = NULL; // Clear the received gesture after printing
+  // }
+
+  // // Do nothing. Everything is done in another task by the web server
+  // // vTaskDelay(10000 / portTICK_PERIOD_MS);  // Non-blocking delay
+
   if (received_gesture) {
     Serial.printf("Received gesture: %s\n", received_gesture);
-    received_gesture = NULL; // Clear the received gesture after printing
+    if (strcmp(received_gesture, "Go") == 0) {
+      Serial.println("Executing Go Command");
+      forward();
+      received_gesture = NULL;
+    } else if (strcmp(received_gesture, "Stop") == 0) {
+      Serial.println("Executing Stop Command");
+      stop();
+      received_gesture = NULL;
+    } else if (strcmp(received_gesture, "Left") == 0) {
+      Serial.println("Executing Left Command");
+      left();
+      received_gesture = NULL;
+    } else if (strcmp(received_gesture, "Right") == 0) {
+      Serial.println("Executing Right Command");
+      right();
+      received_gesture = NULL;
+    } else {
+      Serial.println("Unknown Gesture");
+      received_gesture = NULL;
+    }
   }
-
-  // Do nothing. Everything is done in another task by the web server
-  // vTaskDelay(10000 / portTICK_PERIOD_MS);  // Non-blocking delay
 }
 
-// Task for controlling servos
-void controlServos(void *pvParameters) {
-  while (true) {
-    // Add servo control logic here
-    // For example, read from a queue to get commands and execute them
+// // Task for controlling servos
+// void controlServos(void *pvParameters) {
+//   while (true) {
+//     // Add servo control logic here
+//     // For example, read from a queue to get commands and execute them
 
-    // Non-blocking delay to prevent task from hogging the CPU
-    vTaskDelay(100 / portTICK_PERIOD_MS);
-  }
-}
+//     // Non-blocking delay to prevent task from hogging the CPU
+//     vTaskDelay(100 / portTICK_PERIOD_MS);
+//   }
+// }

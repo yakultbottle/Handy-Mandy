@@ -29,7 +29,7 @@ def send_gesture(url: str, gesture: str):
     except Exception as e:
         print("SEND_GESTURE: something went wrong")
 
-url = 'http://172.20.10.13'
+url = 'http://192.168.8.16'
 
 # Initialize the webcam
 cap = cv2.VideoCapture(url + ":81/stream")
@@ -56,22 +56,22 @@ while True:
         if gesture:
             send_gesture(url, gesture)
             
-    #         cv2.putText(img, gesture, (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-    #     cv2.putText(img, "Hand Detected", (50, 200), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-    # else:
-    #     cv2.putText(img, "No Hand Detected", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3)
+            cv2.putText(img, gesture, (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
+        cv2.putText(img, "Hand Detected", (50, 200), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
+    else:
+        cv2.putText(img, "No Hand Detected", (50, 100), cv2.FONT_HERSHEY_PLAIN, 3, (0, 0, 255), 3)
 
     # Frame rate calculation
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
     print("FPS:", int(fps))
-    # cv2.putText(img, str(int(fps)), (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+    cv2.putText(img, str(int(fps)), (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
     # # Display
-    # cv2.imshow("Image", img)
+    cv2.imshow("Image", img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
-# cv2.destroyAllWindows()
+cv2.destroyAllWindows()

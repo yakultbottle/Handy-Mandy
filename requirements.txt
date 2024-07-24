@@ -1,3 +1,3 @@
-open-cv
+opencv-python
 requests
 mediapipe

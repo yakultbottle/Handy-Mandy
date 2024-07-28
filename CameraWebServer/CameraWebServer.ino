@@ -140,7 +140,12 @@ void loop() {
       Serial.println("Executing Right Command");
       right();
       received_gesture = NULL;
-    } else {
+    } 
+    else if (strcmp(received_gesture, "Dance") == 0) {
+      Serial.println("Executing Dance Command");
+      dance();
+      received_gesture = NULL;
+    }else {
       Serial.println("Unknown Gesture");
       received_gesture = NULL;
     }
